@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Đại Hải Trình Địa Lý - Tìm Kiếm Kho Báu One Piece</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pangolin&family=SVN-Bangers&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Nunito', 'Pangolin', sans-serif;
+            user-select: none;
+            overflow-x: hidden;
+            background-color: #0f172a;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        input {
+            user-select: text;
+        }
+
+        .font-pirate {
+            font-family: 'SVN-Bangers', 'Pangolin', cursive;
+            letter-spacing: 1px;
+        }
+
+        .font-comic {
+            font-family: 'Pangolin', cursive;
+        }
+
+        /* Animated Sea Waves CSS */
+        .ocean {
+            height: 100px;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            overflow: hidden;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .wave {
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 88.7'%3E%3Cpath d='M800 56.9c-155.5 0-204.9-50-400-50S0 56.9 0 56.9V88.7h800v-31.8z' fill='%230284c7' fill-opacity='0.6'/%3E%3C/svg%3E") repeat-x;
+            position: absolute;
+            top: -20px;
+            width: 6400px;
+            height: 100px;
+            animation: wave 12s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
+            transform: translate3d(0, 0, 0);
+        }
+
+        .wave:nth-of-type(2) {
+            top: -25px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 88.7'%3E%3Cpath d='M800 56.9c-155.5 0-204.9-50-400-50S0 56.9 0 56.9V88.7h800v-31.8z' fill='%230369a1' fill-opacity='0.8'/%3E%3C/svg%3E") repeat-x;
+            animation: wave 8s cubic-bezier(0.36, 0.45, 0.63, 0.53) -2s infinite, swell 7s ease -1.25s infinite;
+        }
+
+        @keyframes wave {
+            0% { margin-left: 0; }
+            100% { margin-left: -1600px; }
+        }
+
+        @keyframes swell {
+            0%, 100% { transform: translate3d(0,-10px,0); }
+            50% { transform: translate3d(0,5px,0); }
+        }
+
+        /* Character Idle Motion */
+        .character-idle {
+            animation: floatBob 3.5s ease-in-out infinite;
+        }
+
+        .ship-bob {
+            animation: shipBob 2.5s ease-in-out infinite;
+        }
+
+        .cheer-bounce {
+            animation: cheerJump 0.8s ease-in-out infinite alternate;
+        }
+
+        @keyframes floatBob {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(1.5deg); }
+        }
+
+        @keyframes shipBob {
+            0%, 100% { transform: translateY(0px) rotate(-2deg); }
+            50% { transform: translateY(-5px) rotate(3deg); }
+        }
+
+        @keyframes cheerJump {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-12px) scale(1.06); }
+        }
+
+        /* Shake Effect for Wrong Answer */
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-2px, 0, 0); }
+            20%, 80% { transform: translate3d(4px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+            40%, 60% { transform: translate3d(6px, 0, 0); }
+        }
+
+        /* Custom Scrollbar for Map */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Pirate Button Styles */
+        .btn-pirate-gold {
+            background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%);
+            box-shadow: 0 4px 0 #78350f, 0 6px 10px rgba(0,0,0,0.4);
+            transition: all 0.1s ease;
+        }
+        .btn-pirate-gold:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #78350f, 0 2px 4px rgba(0,0,0,0.4);
+        }
+
+        .btn-pirate-red {
+            background: linear-gradient(180deg, #f87171 0%, #dc2626 100%);
+            box-shadow: 0 4px 0 #7f1d1d, 0 6px 10px rgba(0,0,0,0.4);
+            transition: all 0.1s ease;
+        }
+        .btn-pirate-red:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #7f1d1d;
+        }
+
+        .btn-pirate-blue {
+            background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+            box-shadow: 0 4px 0 #0c4a6e, 0 6px 10px rgba(0,0,0,0.4);
+            transition: all 0.1s ease;
+        }
+        .btn-pirate-blue:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #0c4a6e;
+        }
+
+        /* Speech Bubble Tail */
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            left: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-width: 7px 12px 7px 0;
+            border-style: solid;
+            border-color: transparent #fffdf0 transparent transparent;
+        }
+
+        /* Certificate Glow */
+        .gold-glow {
+            box-shadow: 0 0 25px rgba(251, 191, 36, 0.8), inset 0 0 10px rgba(251, 191, 36, 0.5);
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-100 flex flex-col justify-between relative bg-gradient-to-b from-sky-900 via-sky-800 to-indigo-950">
+
+    <!-- Background Clouds & Sunshine -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        <div class="absolute top-4 left-6 text-white/20 text-5xl md:text-7xl"><i class="fa-solid fa-cloud"></i></div>
+        <div class="absolute top-16 right-10 text-white/15 text-7xl md:text-9xl"><i class="fa-solid fa-cloud"></i></div>
+        <div class="absolute top-32 left-1/3 text-white/10 text-6xl md:text-8xl"><i class="fa-solid fa-cloud"></i></div>
+        <div class="absolute top-8 left-1/4 text-amber-200/40 text-xl tracking-widest font-bold">v v v</div>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
+    <div id="app" class="relative z-10 flex-1 flex flex-col justify-between max-w-5xl w-full mx-auto p-3 sm:p-5 md:p-6">
+
+        <!-- ================================================================= -->
+        <!-- SCREEN 1: HOME SCREEN -->
+        <!-- ================================================================= -->
+        <div id="screen-home" class="flex-1 flex flex-col items-center justify-around py-2 md:py-4">
+            
+            <!-- Header Title -->
+            <div class="text-center my-2 space-y-2">
+                <div class="inline-block bg-amber-500/20 backdrop-blur-md border-2 border-amber-400/50 px-4 py-1 rounded-full text-amber-300 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-lg">
+                    <i class="fa-solid fa-compass text-yellow-400 mr-1.5"></i> Trò Chơi Học Tập Địa Lý lớp 8-12
+                </div>
+                <h1 class="text-3xl sm:text-5xl md:text-6xl font-extrabold font-pirate text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-500 drop-shadow-[0_3px_6px_rgba(0,0,0,0.8)]">
+                    ĐẠI HẢI TRÌNH ĐỊA LÝ
+                </h1>
+                <p class="text-amber-100/90 text-xs sm:text-base font-semibold drop-shadow px-2">
+                    Chinh Phục Miền Nam Trung Bộ & Nam Bộ - Tìm Kiếm Kho Báu One Piece
+                </p>
+            </div>
+
+            <!-- Central Content: Straw Hat Guide & Controls -->
+            <div class="w-full grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 items-center my-2">
+                
+                <!-- Random Guide Character Area -->
+                <div class="md:col-span-7 flex flex-col sm:flex-row items-center justify-center gap-4 bg-slate-900/50 backdrop-blur-md p-4 sm:p-6 rounded-3xl border-2 border-amber-500/30 shadow-xl">
+                    <!-- Character Avatar SVG -->
+                    <div id="home-guide-avatar" class="character-idle flex-shrink-0 w-28 h-28 sm:w-36 sm:h-36 relative drop-shadow-[0_8px_12px_rgba(0,0,0,0.5)]">
+                        <!-- SVG dynamically inserted via JS -->
+                    </div>
+
+                    <!-- Speech Bubble -->
+                    <div class="relative bg-amber-50 text-slate-800 p-4 rounded-2xl border-3 border-amber-600 shadow-lg max-w-xs sm:max-w-sm speech-bubble">
+                        <div class="flex items-center justify-between border-b-2 border-amber-200 pb-1 mb-1.5">
+                            <span id="home-guide-name" class="font-bold text-amber-900 text-base font-pirate">Luffy</span>
+                            <span class="text-[10px] bg-amber-200 text-amber-900 px-2 py-0.5 rounded-full font-bold">Hướng Dẫn</span>
+                        </div>
+                        <p id="home-guide-dialogue" class="text-xs sm:text-sm font-medium leading-relaxed font-comic text-slate-800">
+                            "Shishishi! Chào thuyền trưởng! Cùng tớ vượt 20 hòn đảo Địa Lý tìm One Piece nhé!"
+                        </p>
+                        <button onclick="rollRandomGuide()" class="mt-2 text-[11px] bg-amber-800 hover:bg-amber-700 text-yellow-200 px-2.5 py-1 rounded-lg font-bold transition flex items-center gap-1 shadow">
+                            <i class="fa-solid fa-dice"></i> Đổi Hướng Dẫn Viên
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Action Menu Buttons -->
+                <div class="md:col-span-5 flex flex-col gap-3 w-full max-w-sm mx-auto">
+                    <!-- Player Name Input -->
+                    <div class="bg-amber-950/80 border-2 border-amber-500/50 p-2.5 rounded-2xl shadow-md">
+                        <label class="block text-[11px] font-bold text-amber-300 mb-1 uppercase tracking-wider">Tên Thuyền Trưởng Của Bạn:</label>
+                        <div class="flex items-center bg-slate-900/90 rounded-xl px-3 py-1.5 border border-amber-600/40">
+                            <i class="fa-solid fa-user-ninja text-amber-400 mr-2"></i>
+                            <input type="text" id="player-name-input" value="Mũ Rơm Tập Sự" class="bg-transparent text-amber-100 font-bold focus:outline-none w-full text-sm" placeholder="Nhập tên thuyền trưởng...">
+                        </div>
+                    </div>
+
+                    <!-- Menu Buttons -->
+                    <button onclick="startGame()" class="btn-pirate-gold py-3.5 px-6 rounded-2xl text-amber-950 font-black text-xl sm:text-2xl font-pirate flex items-center justify-center gap-3 tracking-wider group transition">
+                        <i class="fa-solid fa-anchor text-xl group-hover:rotate-45 transition duration-300"></i>
+                        BẮT ĐẦU HẢI TRÌNH
+                    </button>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="openModal('modal-setting')" class="btn-pirate-blue py-2.5 px-3 rounded-2xl text-white font-bold text-base font-pirate flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-sliders"></i> CÀI ĐẶT
+                        </button>
+
+                        <button onclick="openModal('modal-history')" class="btn-pirate-red py-2.5 px-3 rounded-2xl text-white font-bold text-base font-pirate flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-trophy"></i> LỊCH SỬ
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Footer Stats Quick Badge -->
+            <div class="text-[11px] text-sky-200/70 font-semibold text-center bg-slate-950/40 backdrop-blur-sm px-3.5 py-1.5 rounded-full border border-white/10">
+                <i class="fa-solid fa-compass-drafting text-amber-400"></i> 20 Cột mốc &bull; Cần 170/200 điểm nhận Kho Báu One Piece
+            </div>
+
+        </div>
+
+        <!-- ================================================================= -->
+        <!-- SCREEN 2: GAMEPLAY SCREEN -->
+        <!-- ================================================================= -->
+        <div id="screen-game" class="hidden flex-1 flex flex-col justify-between py-1 space-y-2.5">
+            
+            <!-- Top Navigation Bar -->
+            <div class="bg-slate-900/90 backdrop-blur-md border-2 border-amber-500/40 p-2.5 rounded-2xl flex items-center justify-between shadow-lg">
+                <!-- Back Button -->
+                <button onclick="confirmExitToHome()" class="bg-amber-900/80 hover:bg-amber-800 text-amber-200 text-xs px-2.5 py-1.5 rounded-xl font-bold border border-amber-500/50 transition flex items-center gap-1">
+                    <i class="fa-solid fa-house"></i> <span class="hidden sm:inline">Trang Chủ</span>
+                </button>
+
+                <!-- Stage Indicator -->
+                <div class="text-center px-1">
+                    <div id="game-island-title" class="font-pirate text-base sm:text-xl text-yellow-400 drop-shadow tracking-wide">
+                        ĐẢO 1: LÀNG FOOSHA
+                    </div>
+                    <div id="game-progress-text" class="text-[11px] text-sky-200 font-bold">
+                        Cột Mốc 1 / 20
+                    </div>
+                </div>
+
+                <!-- Score Counter -->
+                <div class="bg-amber-950/90 border-2 border-yellow-500/60 px-3 py-1 rounded-xl flex items-center gap-2 shadow-inner">
+                    <i class="fa-solid fa-coins text-yellow-400 text-sm sm:text-base"></i>
+                    <div>
+                        <div class="text-[9px] text-amber-300/80 uppercase font-bold leading-none">Điểm</div>
+                        <div id="game-score-display" class="text-sm sm:text-lg font-black text-yellow-300 leading-none">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Map Tracker Scrollable Area -->
+            <div class="bg-slate-950/60 backdrop-blur-sm border border-amber-500/30 rounded-2xl p-2.5 relative overflow-x-auto no-scrollbar shadow-inner">
+                <div class="min-w-[800px] flex items-center justify-between relative px-6 py-2">
+                    <div class="absolute left-8 right-8 top-1/2 -translate-y-1/2 h-2 bg-amber-900/60 rounded-full border border-amber-600/40 z-0"></div>
+                    <div id="map-progress-line" class="absolute left-8 top-1/2 -translate-y-1/2 h-2 bg-yellow-400 rounded-full transition-all duration-500 z-0" style="width: 0%;"></div>
+
+                    <div id="map-nodes-container" class="relative z-10 w-full flex justify-between items-center">
+                        <!-- Dynamically filled by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage Scene Visual Display -->
+            <div id="stage-bg-card" class="relative bg-gradient-to-r from-sky-800 via-indigo-900 to-slate-900 border-2 border-amber-500/40 rounded-3xl p-3.5 sm:p-5 overflow-hidden min-h-[130px] sm:min-h-[160px] flex items-center justify-between shadow-xl">
+                <div class="flex items-center gap-3 z-10">
+                    <div id="stage-island-icon" class="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 drop-shadow-[0_6px_10px_rgba(0,0,0,0.6)]">
+                        <!-- Island SVG inserted here -->
+                    </div>
+                    <div>
+                        <span id="stage-zone-badge" class="bg-amber-500/20 text-amber-300 border border-amber-400/40 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase">
+                            East Blue
+                        </span>
+                        <h3 id="stage-island-name" class="text-xl sm:text-2xl font-pirate text-yellow-300 drop-shadow mt-0.5">
+                            Làng Foosha
+                        </h3>
+                        <p id="stage-island-desc" class="text-[11px] sm:text-xs text-sky-100/80 font-medium max-w-xs mt-0.5">
+                            Nơi Luffy bắt đầu ước mơ trở thành Vua Hải Tặc!
+                        </p>
+                    </div>
+                </div>
+
+                <div id="cheerleader-area" class="relative z-10 hidden md:flex items-center gap-3">
+                    <div class="speech-bubble bg-amber-50 text-slate-900 px-3 py-1.5 rounded-xl text-xs font-bold border-2 border-amber-600 max-w-[150px]">
+                        <span id="cheer-message">Cố lên thuyền trưởng!</span>
+                    </div>
+                    <div id="cheer-avatar" class="w-16 h-16 cheer-bounce"></div>
+                </div>
+
+                <div class="absolute right-4 bottom-0 opacity-10 text-8xl text-white pointer-events-none">
+                    <i class="fa-solid fa-skull-crossbones"></i>
+                </div>
+            </div>
+
+            <!-- Question & Answer Area -->
+            <div id="question-card" class="bg-amber-50/95 text-slate-900 border-3 sm:border-4 border-amber-700 rounded-3xl p-4 sm:p-5 shadow-2xl relative">
+                <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-amber-800 text-yellow-200 border-2 border-yellow-500/60 px-4 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider shadow">
+                    <i class="fa-solid fa-scroll text-yellow-400 mr-1"></i> CÂU HỎI ĐỊA LÝ <span id="q-type-badge">TRẮC NGHIỆM</span>
+                </div>
+
+                <div id="question-text" class="text-sm sm:text-lg font-bold font-comic text-slate-900 my-2 leading-relaxed text-center">
+                    Đang tải câu hỏi...
+                </div>
+
+                <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-2.5 mt-3">
+                    <!-- Dynamically generated buttons -->
+                </div>
+
+                <div id="feedback-banner" class="hidden mt-3 p-2.5 rounded-xl text-center font-bold text-xs sm:text-sm flex items-center justify-center gap-2"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- MODALS SECTION -->
+    <!-- ================================================================= -->
+    
+    <!-- 1. SETTING MODAL -->
+    <div id="modal-setting" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border-4 border-amber-600 rounded-3xl p-5 sm:p-6 max-w-sm w-full shadow-2xl relative text-amber-100">
+            <button onclick="closeModal('modal-setting')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h2 class="text-xl font-pirate text-yellow-400 mb-5 text-center border-b border-amber-500/30 pb-2">
+                <i class="fa-solid fa-sliders mr-2"></i> CÀI ĐẶT ÂM THANH
+            </h2>
+            <div class="space-y-4">
+                <div class="flex items-center justify-between bg-slate-800/80 p-3 rounded-xl border border-amber-500/20">
+                    <span class="font-bold text-xs sm:text-sm"><i class="fa-solid fa-music text-amber-400 mr-2"></i> Nhạc Nền (BGM):</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="setting-bgm" class="sr-only peer" checked onchange="toggleBGM()">
+                        <div class="w-10 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+                    </label>
+                </div>
+                <div class="flex items-center justify-between bg-slate-800/80 p-3 rounded-xl border border-amber-500/20">
+                    <span class="font-bold text-xs sm:text-sm"><i class="fa-solid fa-volume-high text-amber-400 mr-2"></i> Hiệu Ứng (SFX):</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="setting-sfx" class="sr-only peer" checked onchange="toggleSFX()">
+                        <div class="w-10 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+                    </label>
+                </div>
+                <div class="bg-slate-800/80 p-3 rounded-xl border border-amber-500/20 space-y-2">
+                    <div class="flex justify-between text-xs sm:text-sm font-bold">
+                        <span><i class="fa-solid fa-volume-low text-amber-400 mr-2"></i> Âm Lượng:</span>
+                        <span id="volume-val-text" class="text-yellow-400">70%</span>
+                    </div>
+                    <input type="range" id="setting-volume" min="0" max="100" value="70" oninput="adjustVolume(this.value)" class="w-full accent-amber-500 cursor-pointer">
+                </div>
+            </div>
+            <button onclick="closeModal('modal-setting')" class="mt-5 w-full btn-pirate-gold py-2.5 rounded-xl font-pirate text-amber-950 font-bold text-base">
+                XÁC NHẬN
+            </button>
+        </div>
+    </div>
+
+    <!-- 2. HISTORY MODAL -->
+    <div id="modal-history" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border-4 border-amber-600 rounded-3xl p-5 sm:p-6 max-w-lg w-full shadow-2xl relative text-amber-100 flex flex-col max-h-[80vh]">
+            <button onclick="closeModal('modal-history')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h2 class="text-xl font-pirate text-yellow-400 mb-3 text-center border-b border-amber-500/30 pb-2">
+                <i class="fa-solid fa-scroll mr-2"></i> LỊCH SỬ & DANH HIỆU
+            </h2>
+            
+            <div id="history-list-container" class="flex-1 overflow-y-auto space-y-2.5 pr-1 my-2">
+                <!-- Dynamically rendered history items -->
+            </div>
+
+            <div class="pt-3 border-t border-amber-500/30 flex justify-between items-center">
+                <button onclick="clearHistory()" class="text-xs text-rose-400 hover:text-rose-300 font-bold flex items-center gap-1">
+                    <i class="fa-solid fa-trash-can"></i> Xóa Lịch Sử
+                </button>
+                <button onclick="closeModal('modal-history')" class="btn-pirate-gold px-5 py-2 rounded-xl font-pirate text-amber-950 font-bold text-sm">
+                    ĐÓNG
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. TREASURE RESULT CERTIFICATE MODAL -->
+    <div id="modal-treasure" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+        <div class="bg-amber-100 text-slate-900 border-6 sm:border-8 border-amber-700 rounded-3xl p-5 sm:p-8 max-w-xl w-full shadow-2xl relative my-auto">
+            
+            <!-- Modal Content - Chest Stage 1 -->
+            <div id="chest-opening-view" class="text-center py-4 space-y-4">
+                <h2 class="text-2xl sm:text-4xl font-pirate text-amber-900 drop-shadow">
+                    ĐÃ ĐẾN HÒN ĐẢO LAUGH TALE!
+                </h2>
+                <p class="text-xs sm:text-base font-bold text-amber-800 font-comic">
+                    Chúc mừng bạn đã hoàn thành 20 cột mốc Địa Lý Nam Trung Bộ & Nam Bộ!
+                </p>
+
+                <div class="relative w-40 h-40 mx-auto cursor-pointer group" onclick="revealCertificate()">
+                    <div class="absolute inset-0 bg-yellow-400/30 rounded-full blur-xl group-hover:bg-yellow-400/60 transition duration-500"></div>
+                    <div class="relative z-10 w-full h-full flex items-center justify-center text-7xl text-amber-600 group-hover:scale-110 transition duration-300">
+                        <i class="fa-solid fa-box-archive animate-bounce"></i>
+                    </div>
+                </div>
+
+                <button onclick="revealCertificate()" class="btn-pirate-gold py-3 px-6 rounded-2xl text-amber-950 font-black text-xl font-pirate animate-pulse shadow-xl">
+                    <i class="fa-solid fa-key mr-1.5"></i> MỞ RƯƠNG KHO BÁU
+                </button>
+            </div>
+
+            <!-- Modal Content - Certificate Stage 2 -->
+            <div id="certificate-view" class="hidden text-center space-y-3">
+                <div id="cert-box" class="p-4 sm:p-6 rounded-2xl border-3 border-amber-600 bg-[#fdf8e6] relative overflow-hidden shadow-xl">
+                    <div class="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none text-[140px]">
+                        <i class="fa-solid fa-skull-crossbones"></i>
+                    </div>
+
+                    <div class="border-b-2 border-amber-800/40 pb-2 mb-3">
+                        <span id="cert-badge" class="bg-amber-800 text-yellow-300 font-bold text-[10px] sm:text-xs uppercase px-2.5 py-0.5 rounded-full tracking-wider">
+                            CHỨNG CHỈ VUA HẢI TẶC ĐỊA LÝ
+                        </span>
+                        <h2 id="cert-title" class="text-xl sm:text-3xl font-black font-pirate text-amber-950 mt-1.5">
+                            BẰNG CHỨNG NHẬN XUẤT SẮC
+                        </h2>
+                    </div>
+
+                    <p class="text-xs sm:text-sm font-semibold text-slate-800">Cấp cho Thuyền Trưởng:</p>
+                    <h3 id="cert-player-name" class="text-xl sm:text-2xl font-black font-pirate text-amber-900 my-1 underline decoration-amber-500">
+                        Mũ Rơm Tập Sự
+                    </h3>
+
+                    <p id="cert-message" class="text-xs sm:text-sm font-medium font-comic text-slate-800 my-2 leading-relaxed">
+                        Đã thông thạo toàn bộ kiến thức Địa Lý Miền Nam Trung Bộ & Nam Bộ!
+                    </p>
+
+                    <div class="inline-flex items-center gap-2.5 bg-amber-950 text-yellow-300 px-4 py-2 rounded-xl border border-yellow-500/60 shadow my-1">
+                        <i class="fa-solid fa-award text-xl text-yellow-400"></i>
+                        <div class="text-left">
+                            <div class="text-[9px] uppercase font-bold text-amber-300/80 leading-none">Tổng Điểm</div>
+                            <div id="cert-score-text" class="text-xl font-black font-pirate leading-none">180 / 200</div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-end mt-4 pt-3 border-t border-amber-800/20 text-[11px] font-bold text-amber-900">
+                        <div>
+                            <div>Đại Hải Trình Địa Lý</div>
+                            <div class="text-[9px] text-slate-500 font-normal">Hội Hải Tặc Địa Lý VN</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-14 h-14 rounded-full border-2 border-dashed border-red-600 flex items-center justify-center text-red-600 font-black text-[9px] uppercase rotate-[-12deg] p-0.5 mx-auto bg-red-100/50">
+                                MŨ RƠM<br>APPROVED
+                            </div>
+                            <div class="mt-0.5 font-pirate text-xs text-red-700">Monkey D. Luffy</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-2.5 justify-center pt-1">
+                    <button onclick="startGame()" class="btn-pirate-gold py-2.5 px-5 rounded-xl font-pirate text-amber-950 font-bold text-base flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-rotate-right"></i> CHƠI LẠI
+                    </button>
+                    <button onclick="returnToHome()" class="btn-pirate-blue py-2.5 px-5 rounded-xl font-pirate text-white font-bold text-base flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-house"></i> VỀ TRANG CHỦ
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Animated Sea Waves Layer -->
+    <div class="ocean">
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+
+    <script>
+        /* ================================================================= */
+        /* 1. CHARACTER SVG DATA & RANDOM GUIDES                             */
+        /* ================================================================= */
+
+        const CREW_MEMBERS = [
+            {
+                id: 'luffy',
+                name: 'Monkey D. Luffy',
+                quote: 'Shishishi! Tớ là Luffy! Hãy cùng tớ chinh phục 20 hòn đảo Địa Lý Nam Trung Bộ và Nam Bộ nhé!',
+                cheer: 'Tiến lên thuyền trưởng! One Piece đang ở phía trước!',
+                svg: `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="50" r="45" fill="#fef08a" stroke="#ca8a04" stroke-width="3"/><path d="M20,42 Q50,20 80,42" fill="#eab308" stroke="#854d0e" stroke-width="4"/><path d="M25,41 Q50,33 75,41" fill="#dc2626"/><circle cx="50" cy="58" r="24" fill="#fde047"/><circle cx="42" cy="54" r="3" fill="#000"/><circle cx="58" cy="54" r="3" fill="#000"/><path d="M38,58 L44,60" stroke="#dc2626" stroke-width="2"/><path d="M38,66 Q50,78 62,66 Z" fill="#000"/><path d="M42,67 Q50,73 58,67" fill="#fff"/></svg>`
+            },
+            {
+                id: 'zoro',
+                name: 'Roronoa Zoro',
+                quote: 'Đề phòng lạc đường... Chuẩn bị tinh thần chiến đấu vượt qua các câu hỏi Địa Lý nào!',
+                cheer: 'Cắt phăng các câu hỏi khó đi!',
+                svg: `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="50" r="45" fill="#bbf7d0" stroke="#15803d" stroke-width="3"/><path d="M25,50 Q50,15 75,50 Q65,30 50,28 Q35,30 25,50 Z" fill="#22c55e"/><circle cx="50" cy="58" r="22" fill="#fef08a"/><line x1="38" y1="48" x2="44" y2="58" stroke="#15803d" stroke-width="3"/><circle cx="58" cy="53" r="3" fill="#000"/><path d="M42,68 Q52,65 60,70" stroke="#000" stroke-width="3" fill="none"/><circle cx="26" cy="60" r="2" fill="#eab308"/><circle cx="26" cy="64" r="2" fill="#eab308"/></svg>`
+            },
+            {
+                id: 'nami',
+                name: 'Nami',
+                quote: 'Hải đồ Địa Lý đã sẵn sàng! Trả lời đúng các câu hỏi để kiếm điểm và mở rương kho báu nhé!',
+                cheer: 'Trả lời đúng là có điểm thưởng lớn đó nha!',
+                svg: `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="50" r="45" fill="#ffedd5" stroke="#ea580c" stroke-width="3"/><path d="M20,60 Q20,20 50,20 Q80,20 80,60 Q70,30 50,30 Q30,30 20,60 Z" fill="#f97316"/><circle cx="50" cy="58" r="22" fill="#fde047"/><ellipse cx="40" cy="54" rx="3" ry="4" fill="#0284c7"/><ellipse cx="60" cy="54" rx="3" ry="4" fill="#0284c7"/><path d="M42,68 Q50,74 58,68" stroke="#c2410c" stroke-width="2.5" fill="none"/></svg>`
+            },
+            {
+                id: 'chopper',
+                name: 'Tony Tony Chopper',
+                quote: 'Cố gắng trả lời đúng để đạt từ 170 điểm trở lên nhận chứng chỉ Vua Hải Tặc nhé!',
+                cheer: 'Khen tớ cũng không vui đâu đồ ngốc~!',
+                svg: `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="50" r="45" fill="#fce7f3" stroke="#db2777" stroke-width="3"/><path d="M25,45 Q50,20 75,45" fill="#ec4899"/><rect x="44" y="28" width="12" height="12" fill="#fff"/><circle cx="50" cy="58" r="5" fill="#0284c7"/><circle cx="38" cy="52" r="3" fill="#000"/><circle cx="62" cy="52" r="3" fill="#000"/><path d="M42,66 Q50,75 58,66 Z" fill="#db2777"/></svg>`
+            }
+        ];
+
+        /* ================================================================= */
+        /* 2. 20 ISLAND / STAGE DATA & GEOGRAPHY QUESTIONS                   */
+        /* ================================================================= */
+
+        const ISLANDS_DATA = [
+            { name: 'Foosha Village', zone: 'East Blue', desc: 'Làng khởi đầu hải trình' },
+            { name: 'Orange Town', zone: 'East Blue', desc: 'Thị trấn thịnh vượng' },
+            { name: 'Baratie', zone: 'East Blue', desc: 'Nhà hàng nổi trên biển' },
+            { name: 'Arlong Park', zone: 'East Blue', desc: 'Căn cứ hải tặc người cá' },
+            { name: 'Loguetown', zone: 'East Blue', desc: 'Nơi bắt đầu và kết thúc' },
+            { name: 'Reverse Mountain', zone: 'Grand Line', desc: 'Dòng hải lưu ngược núi' },
+            { name: 'Alabasta', zone: 'Grand Line', desc: 'Vương quốc sa mạc' },
+            { name: 'Skypiea', zone: 'Sky Island', desc: 'Đảo trên tầng mây' },
+            { name: 'Water 7', zone: 'Grand Line', desc: 'Thành phố sông nước' },
+            { name: 'Enies Lobby', zone: 'Grand Line', desc: 'Tòa án công lý bất dạ' },
+            { name: 'Thriller Bark', zone: 'Grand Line', desc: 'Con tàu ma quái' },
+            { name: 'Sabaody', zone: 'Grand Line', desc: 'Quần đảo bong bóng' },
+            { name: 'Impel Down', zone: 'Grand Line', desc: 'Nhà tù ngầm dưới biển' },
+            { name: 'Marineford', zone: 'Grand Line', desc: 'Tổng bộ hải quân' },
+            { name: 'Fishman Island', zone: 'New World', desc: 'Đảo người cá dưới đáy biển' },
+            { name: 'Punk Hazard', zone: 'New World', desc: 'Hòn đảo băng và lửa' },
+            { name: 'Dressrosa', zone: 'New World', desc: 'Vương quốc tình yêu & đồ chơi' },
+            { name: 'Whole Cake', zone: 'New World', desc: 'Vương quốc bánh ngọt' },
+            { name: 'Wano Country', zone: 'New World', desc: 'Đất nước Samurai' },
+            { name: 'Laugh Tale', zone: 'Final Island', desc: 'Nơi cất giữ Kho Báu One Piece' }
+        ];
+
+        const QUESTIONS_BANK = [
+            { type: 'MCQ', question: 'Ranh giới phía bắc của Miền Nam Trung Bộ và Nam Bộ bắt đầu từ dãy núi nào trở vào nam?', options: ['A. Dãy Hoàng Liên Sơn', 'B. Dãy Bạch Mã', 'C. Dãy Trường Sơn Bắc', 'D. Dãy Hoành Sơn'], correct: 1 },
+            { type: 'MCQ', question: 'Dãy núi Trường Sơn Nam có hình dạng đặc trưng và đặc điểm hình thể nào?', options: ['A. Hình dải thẳng, cân đối hai sườn', 'B. Hình cánh cung, có sự bất đối xứng giữa sườn đông và sườn tây', 'C. Hình tròn, cao đều ở hai sườn', 'D. Hình răng cưa, dốc đều về phía tây'], correct: 1 },
+            { type: 'MCQ', question: 'Các cao nguyên badan tập trung chủ yếu ở những khu vực nào trong miền?', options: ['A. Khu vực Tây Nguyên và ria Đông Nam Bộ', 'B. Dải đồng bằng ven biển Nam Trung Bộ', 'C. Đồng bằng sông Cửu Long và các đảo', 'D. Vùng núi phía bắc dãy Bạch Mã'], correct: 0 },
+            { type: 'MCQ', question: 'Loại đất chiếm vị trí chủ yếu ở vùng núi và cao nguyên của miền là gì?', options: ['A. Đất phèn và đất mặn', 'B. Đất phù sa sông màu mỡ', 'C. Đất feralit trên đá badan và đất feralit trên các loại đá khác', 'D. Đất cát và đất xám trên phù sa cổ'], correct: 2 },
+            { type: 'MCQ', question: 'Đặc điểm biên độ nhiệt năm của khí hậu Miền Nam Trung Bộ và Nam Bộ là gì?', options: ['A. Biên độ nhiệt năm rất lớn', 'B. Biên độ nhiệt năm nhỏ', 'C. Thay đổi đột ngột giữa các tháng', 'D. Không có dữ liệu ghi nhận'], correct: 1 },
+            { type: 'MCQ', question: 'Đặc điểm sông ngòi ở khu vực Nam Trung Bộ được mô tả như thế nào?', options: ['A. Phần lớn là sông lớn, dài và chảy sang phía tây', 'B. Phần lớn là sông nhỏ, ngắn bắt nguồn từ vùng núi Trường Sơn Nam đổ ra Biển Đông', 'C. Là các sông không có lưu vực cố định', 'D. Hệ thống kênh rạch chằng chịt ngập nước quanh năm'], correct: 1 },
+            { type: 'MCQ', question: 'Cảnh quan thiên nhiên điển hình của toàn Miền Nam Trung Bộ và Nam Bộ là gì?', options: ['A. Đới rừng ôn đới gió mùa', 'B. Đới rừng cận xích đạo gió mùa', 'C. Đới rừng lá kim cận nhiệt', 'D. Đới thảo nguyên và bán hoang mạc'], correct: 1 },
+            { type: 'MCQ', question: 'Ở Đồng bằng sông Cửu Long phát triển các kiểu rừng đặc trưng nào?', options: ['A. Rừng nhiệt đới gió mùa rụng lá và nửa rụng lá', 'B. Rừng ngập mặn và rừng tràm', 'C. Rừng lá rộng thường xanh trên núi cao', 'D. Rừng thông và rừng tre nứa'], correct: 1 },
+            { type: 'MCQ', question: 'Khoáng sản nổi bật được ghi nhận ở khu vực thềm lục địa của miền là gì?', options: ['A. Bô-xít và than đá', 'B. Dầu mỏ và khí tự nhiên', 'C. Sắt và đá vôi', 'D. Vàng và đất hiếm'], correct: 1 },
+            { type: 'MCQ', question: 'Ngoài đất feralit, đất phù sa, đất phèn và đất mặn, trong miền còn xuất hiện những loại đất nào khác?', options: ['A. Đất cát và đất xám trên phù sa cổ', 'B. Đất mùn núi cao và đất đen', 'C. Đất nâu đỏ và đất mặn ven sông', 'D. Đất phù sa cổ và đất đỏ bazan'], correct: 0 },
+            { type: 'MCQ', question: 'Phạm vi của miền gồm khu vực Nam Trung Bộ và Nam Bộ cùng vùng biển rộng lớn với nhiều đảo, quần đảo.', correct: true }, // Placeholder mapped to TF logic
+            { type: 'TF', question: 'Dải đồng bằng ven biển Nam Trung Bộ rất rộng lớn, bằng phẳng và không bị chia cắt bởi các dãy núi.', correct: false },
+            { type: 'TF', question: 'Ở Đồng bằng sông Cửu Long, ngoài đất phù sa sông màu mỡ còn xuất hiện đất phèn và đất mặn.', correct: true },
+            { type: 'TF', question: 'Đất phù sa ở dải đồng bằng ven biển miền Trung được đánh giá là màu mỡ hơn đất phù sa sông ở ĐBSCL.', correct: false },
+            { type: 'TF', question: 'Khí hậu của miền có hai mùa rõ rệt là mùa mưa và mùa khô, trong đó mùa khô kéo dài và gay gắt.', correct: true },
+            { type: 'TF', question: 'Ở Đồng bằng sông Cửu Long, sông Tiền và sông Hậu gộp thành một dòng duy nhất trước khi đổ ra biển.', correct: false },
+            { type: 'TF', question: 'Ở khu vực Tây Nguyên có kiểu rừng nhiệt đới gió mùa nửa rụng lá và rụng lá.', correct: true },
+            { type: 'TF', question: 'Trang sách thể hiện nội dung văn bản tham khảo Địa Lý ở tài liệu có số trang là 24.', correct: true },
+            { type: 'TF', question: 'Khoáng sản bô-xít theo bài viết tập trung chủ yếu ở khu vực Tây Nguyên và Đông Nam Bộ.', correct: true },
+            { type: 'TF', question: 'Đồng bằng sông Cửu Long có đặc điểm là rộng lớn, hệ thống kênh rạch chằng chịt và ngập nước mùa lũ.', correct: true }
+        ];
+
+        // Fix item 10 to be explicit True/False
+        QUESTIONS_BANK[10] = {
+            type: 'TF',
+            question: 'Phạm vi của miền gồm khu vực Nam Trung Bộ và Nam Bộ cùng vùng biển rộng lớn với nhiều đảo, quần đảo.',
+            correct: true
+        };
+
+        /* ================================================================= */
+        /* 3. WEB AUDIO API SOUND SYNTHESIZER                                */
+        /* ================================================================= */
+
+        let audioCtx = null;
+        let bgmInterval = null;
+        let soundSettings = { bgm: true, sfx: true, volume: 0.7 };
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playTone(freq, type, duration, delay = 0) {
+            if (!soundSettings.sfx) return;
+            initAudio();
+            setTimeout(() => {
+                try {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = type;
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(soundSettings.volume * 0.3, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + duration);
+                } catch(e) {}
+            }, delay * 1000);
+        }
+
+        function playCorrectSound() {
+            playTone(523.25, 'sine', 0.15, 0);
+            playTone(659.25, 'sine', 0.15, 0.1);
+            playTone(783.99, 'sine', 0.15, 0.2);
+            playTone(1046.50, 'triangle', 0.3, 0.3);
+        }
+
+        function playWrongSound() {
+            playTone(220, 'sawtooth', 0.2, 0);
+            playTone(180, 'sawtooth', 0.3, 0.15);
+        }
+
+        function playVictoryFanfare() {
+            const notes = [523.25, 659.25, 783.99, 1046.5, 880, 1046.5];
+            notes.forEach((f, idx) => {
+                playTone(f, 'triangle', 0.25, idx * 0.12);
+            });
+        }
+
+        function toggleBGM() {
+            soundSettings.bgm = document.getElementById('setting-bgm').checked;
+            if (soundSettings.bgm) startBGM();
+            else stopBGM();
+        }
+
+        function toggleSFX() {
+            soundSettings.sfx = document.getElementById('setting-sfx').checked;
+        }
+
+        function adjustVolume(val) {
+            soundSettings.volume = val / 100;
+            document.getElementById('volume-val-text').innerText = val + '%';
+        }
+
+        function startBGM() {
+            if (!soundSettings.bgm || bgmInterval) return;
+            initAudio();
+            let noteIdx = 0;
+            const arpeggio = [261.63, 329.63, 392.00, 523.25, 392.00, 329.63];
+            bgmInterval = setInterval(() => {
+                if (!soundSettings.bgm) return;
+                try {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(arpeggio[noteIdx % arpeggio.length], audioCtx.currentTime);
+                    gain.gain.setValueAtTime(soundSettings.volume * 0.04, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.4);
+                    noteIdx++;
+                } catch(e) {}
+            }, 600);
+        }
+
+        function stopBGM() {
+            if (bgmInterval) {
+                clearInterval(bgmInterval);
+                bgmInterval = null;
+            }
+        }
+
+        /* ================================================================= */
+        /* 4. GAME STATE & CORE LOGIC                                        */
+        /* ================================================================= */
+
+        let currentGuide = null;
+        let currentStageIndex = 0;
+        let score = 0;
+        let playerName = "Mũ Rơm Tập Sự";
+        let questionFirstAttempt = new Array(20).fill(true);
+        let cheerleadersMap = {};
+
+        window.onload = function() {
+            rollRandomGuide();
+            setupCheerleaders();
+            renderMapNodes();
+            loadHistory();
+        };
+
+        function rollRandomGuide() {
+            const randomIndex = Math.floor(Math.random() * CREW_MEMBERS.length);
+            currentGuide = CREW_MEMBERS[randomIndex];
+            document.getElementById('home-guide-avatar').innerHTML = currentGuide.svg;
+            document.getElementById('home-guide-name').innerText = currentGuide.name;
+            document.getElementById('home-guide-dialogue').innerText = `"${currentGuide.quote}"`;
+        }
+
+        function setupCheerleaders() {
+            cheerleadersMap = {};
+            const availableStages = Array.from({length: 18}, (_, i) => i + 1);
+            const shuffled = availableStages.sort(() => 0.5 - Math.random());
+            shuffled.slice(0, 8).forEach(stageIdx => {
+                cheerleadersMap[stageIdx] = CREW_MEMBERS[Math.floor(Math.random() * CREW_MEMBERS.length)];
+            });
+        }
+
+        function startGame() {
+            initAudio();
+            if (soundSettings.bgm) startBGM();
+
+            const inputVal = document.getElementById('player-name-input').value.trim();
+            playerName = inputVal !== "" ? inputVal : "Mũ Rơm Tập Sự";
+
+            currentStageIndex = 0;
+            score = 0;
+            questionFirstAttempt = new Array(20).fill(true);
+
+            document.getElementById('screen-home').classList.add('hidden');
+            document.getElementById('screen-game').classList.remove('hidden');
+            closeModal('modal-treasure');
+
+            updateGameplayUI();
+        }
+
+        function updateGameplayUI() {
+            const island = ISLANDS_DATA[currentStageIndex];
+            const qData = QUESTIONS_BANK[currentStageIndex];
+
+            document.getElementById('game-island-title').innerText = `ĐẢO ${currentStageIndex + 1}: ${island.name.toUpperCase()}`;
+            document.getElementById('game-progress-text').innerText = `Cột Mốc ${currentStageIndex + 1} / 20`;
+            document.getElementById('game-score-display').innerText = score;
+
+            const progressPct = (currentStageIndex / 19) * 100;
+            document.getElementById('map-progress-line').style.width = `${progressPct}%`;
+            renderMapNodes();
+
+            document.getElementById('stage-island-name').innerText = island.name;
+            document.getElementById('stage-zone-badge').innerText = island.zone;
+            document.getElementById('stage-island-desc').innerText = island.desc;
+            document.getElementById('stage-island-icon').innerHTML = getIslandSVG(currentStageIndex);
+
+            const cheerArea = document.getElementById('cheerleader-area');
+            if (cheerleadersMap[currentStageIndex]) {
+                const cheerMember = cheerleadersMap[currentStageIndex];
+                document.getElementById('cheer-avatar').innerHTML = cheerMember.svg;
+                document.getElementById('cheer-message').innerText = cheerMember.cheer;
+                cheerArea.classList.remove('hidden');
+            } else {
+                cheerArea.classList.add('hidden');
+            }
+
+            const qCard = document.getElementById('question-card');
+            qCard.classList.remove('shake');
+            document.getElementById('q-type-badge').innerText = qData.type === 'MCQ' ? 'TRẮC NGHIỆM ABCD' : 'ĐÚNG / SAI';
+            document.getElementById('question-text').innerText = `${currentStageIndex + 1}. ${qData.question}`;
+
+            const fb = document.getElementById('feedback-banner');
+            fb.className = 'hidden mt-3 p-2.5 rounded-xl text-center font-bold text-xs sm:text-sm flex items-center justify-center gap-2';
+            fb.innerHTML = '';
+
+            const optContainer = document.getElementById('options-container');
+            optContainer.innerHTML = '';
+
+            if (qData.type === 'MCQ') {
+                qData.options.forEach((optText, optIdx) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'bg-amber-100 hover:bg-amber-200 text-amber-950 border-2 border-amber-600 rounded-2xl p-3 text-left font-bold text-xs sm:text-sm shadow transition transform hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2';
+                    btn.onclick = () => handleAnswerSelect(optIdx);
+                    btn.innerHTML = `<span class="w-6 h-6 rounded-full bg-amber-800 text-yellow-200 flex items-center justify-center text-xs font-black flex-shrink-0">${String.fromCharCode(65 + optIdx)}</span> <span>${optText.replace(/^[A-D]\.\s*/, '')}</span>`;
+                    optContainer.appendChild(btn);
+                });
+            } else {
+                const btnTrue = document.createElement('button');
+                btnTrue.className = 'bg-emerald-600 hover:bg-emerald-500 text-white border-3 border-emerald-800 rounded-2xl p-3.5 font-black text-lg sm:text-xl shadow-lg transition transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2';
+                btnTrue.onclick = () => handleAnswerSelect(true);
+                btnTrue.innerHTML = `<i class="fa-solid fa-circle-check"></i> Ô ĐÚNG (✓)`;
+
+                const btnFalse = document.createElement('button');
+                btnFalse.className = 'bg-rose-600 hover:bg-rose-500 text-white border-3 border-rose-800 rounded-2xl p-3.5 font-black text-lg sm:text-xl shadow-lg transition transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2';
+                btnFalse.onclick = () => handleAnswerSelect(false);
+                btnFalse.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> Ô SAI (✗)`;
+
+                optContainer.appendChild(btnTrue);
+                optContainer.appendChild(btnFalse);
+            }
+        }
+
+        /* ================================================================= */
+        /* 5. ANSWER EVALUATION & STRICT PROGRESSION RULE                    */
+        /* ================================================================= */
+
+        function handleAnswerSelect(userChoice) {
+            const qData = QUESTIONS_BANK[currentStageIndex];
+            const isCorrect = (userChoice === qData.correct);
+            const fb = document.getElementById('feedback-banner');
+            const qCard = document.getElementById('question-card');
+
+            if (isCorrect) {
+                playCorrectSound();
+
+                if (questionFirstAttempt[currentStageIndex]) {
+                    score += 10;
+                }
+
+                document.getElementById('game-score-display').innerText = score;
+
+                fb.className = 'mt-3 p-2.5 rounded-xl text-center font-bold text-xs sm:text-sm flex items-center justify-center gap-2 bg-emerald-100 text-emerald-900 border-2 border-emerald-500 shadow';
+                fb.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 text-lg"></i> CHÍNH XÁC! TIẾN VỀ ĐẢO TIẾP THEO! (+${questionFirstAttempt[currentStageIndex] ? 10 : 0} ĐIỂM)`;
+
+                const btns = document.querySelectorAll('#options-container button');
+                btns.forEach(b => b.disabled = true);
+
+                setTimeout(() => {
+                    if (currentStageIndex < 19) {
+                        currentStageIndex++;
+                        updateGameplayUI();
+                    } else {
+                        triggerTreasureEndGame();
+                    }
+                }, 1200);
+
+            } else {
+                playWrongSound();
+                questionFirstAttempt[currentStageIndex] = false;
+
+                qCard.classList.remove('shake');
+                void qCard.offsetWidth;
+                qCard.classList.add('shake');
+
+                fb.className = 'mt-3 p-2.5 rounded-xl text-center font-bold text-xs sm:text-sm flex items-center justify-center gap-2 bg-rose-100 text-rose-900 border-2 border-rose-500 shadow';
+                fb.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-rose-600 text-lg"></i> SAI RỒI! HÃY CHỌN LẠI ĐÁP ÁN ĐÚNG ĐỂ TIẾP TỤC HẢI TRÌNH!`;
+            }
+        }
+
+        /* ================================================================= */
+        /* 6. TREASURE & CERTIFICATE DISPLAY                                 */
+        /* ================================================================= */
+
+        function triggerTreasureEndGame() {
+            playVictoryFanfare();
+            openModal('modal-treasure');
+            document.getElementById('chest-opening-view').classList.remove('hidden');
+            document.getElementById('certificate-view').classList.add('hidden');
+        }
+
+        function revealCertificate() {
+            playTone(880, 'triangle', 0.4);
+            document.getElementById('chest-opening-view').classList.add('hidden');
+            document.getElementById('certificate-view').classList.remove('hidden');
+
+            const certBox = document.getElementById('cert-box');
+            const certBadge = document.getElementById('cert-badge');
+            const certTitle = document.getElementById('cert-title');
+            const certPlayerName = document.getElementById('cert-player-name');
+            const certMessage = document.getElementById('cert-message');
+            const certScoreText = document.getElementById('cert-score-text');
+
+            certPlayerName.innerText = playerName;
+            certScoreText.innerText = `${score} / 200`;
+
+            const isExcellence = score >= 170;
+
+            if (isExcellence) {
+                certBox.className = 'p-4 sm:p-6 rounded-2xl border-3 border-amber-600 bg-[#fdf8e6] relative overflow-hidden shadow-xl gold-glow';
+                certBadge.className = 'bg-amber-800 text-yellow-300 font-bold text-[10px] sm:text-xs uppercase px-2.5 py-0.5 rounded-full tracking-wider';
+                certBadge.innerText = 'CHỨNG CHỈ VUA HẢI TẶC ĐỊA LÝ';
+                certTitle.innerText = 'BẰNG CHỨNG NHẬN HOÀN THÀNH XUẤT SẮC';
+                certMessage.innerText = `Chúc mừng Thuyền Trưởng ${playerName}! Bạn đã thể hiện kiến thức Địa Lý vô cùng xuất sắc, xứng đáng làm VUA HẢI TẶC ĐỊA LÝ!`;
+            } else {
+                certBox.className = 'p-4 sm:p-6 rounded-2xl border-3 border-slate-500 bg-[#f8fafc] relative overflow-hidden shadow-xl';
+                certBadge.className = 'bg-slate-700 text-slate-200 font-bold text-[10px] sm:text-xs uppercase px-2.5 py-0.5 rounded-full tracking-wider';
+                certBadge.innerText = 'RƯƠNG AN ỦI';
+                certTitle.innerText = 'GIẤY KHEN THƯỞNG TÂN BINH';
+                certMessage.innerText = `Bạn đạt ${score}/200 điểm. Hãy ôn tập thêm kiến thức Địa Lý Nam Trung Bộ & Nam Bộ và thử lại nhé!`;
+            }
+
+            saveHistoryRecord(isExcellence);
+        }
+
+        /* ================================================================= */
+        /* 7. MAP NODES & SVG GRAPHICS HELPERS                               */
+        /* ================================================================= */
+
+        function renderMapNodes() {
+            const container = document.getElementById('map-nodes-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            ISLANDS_DATA.forEach((island, idx) => {
+                const node = document.createElement('div');
+                node.className = 'relative flex flex-col items-center cursor-pointer group z-10';
+
+                const isActive = (idx === currentStageIndex);
+                const isPassed = (idx < currentStageIndex);
+
+                let badgeColor = 'bg-slate-700 text-slate-400 border-slate-600';
+                if (isActive) badgeColor = 'bg-yellow-400 text-slate-950 border-yellow-200 ring-4 ring-yellow-400/50 scale-125';
+                else if (isPassed) badgeColor = 'bg-amber-600 text-amber-100 border-amber-400';
+
+                node.innerHTML = `
+                    ${isActive ? `<div class="absolute -top-6 ship-bob w-7 h-7 z-20">${getThousandSunnySVG()}</div>` : ''}
+                    <div class="w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 ${badgeColor} flex items-center justify-center font-bold text-[10px] sm:text-xs shadow transition duration-300">
+                        ${isPassed ? '<i class="fa-solid fa-check"></i>' : idx + 1}
+                    </div>
+                    <span class="text-[8px] sm:text-[9px] font-bold text-sky-200/80 mt-1 whitespace-nowrap opacity-80 group-hover:opacity-100">
+                        ${island.name}
+                    </span>
+                `;
+                container.appendChild(node);
+            });
+        }
+
+        function getThousandSunnySVG() {
+            return `<svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-[0_3px_5px_rgba(0,0,0,0.6)]"><path d="M15,60 Q50,85 85,60 L75,78 Q50,90 25,78 Z" fill="#78350f" stroke="#451a03" stroke-width="2"/><path d="M30,22 Q50,12 70,22 Q50,55 30,22 Z" fill="#fff" stroke="#94a3b8" stroke-width="2"/><circle cx="50" cy="33" r="6" fill="#000"/><circle cx="82" cy="55" r="12" fill="#f59e0b"/><circle cx="82" cy="55" r="8" fill="#fef08a"/></svg>`;
+        }
+
+        function getIslandSVG(index) {
+            const colors = ['#10b981', '#f59e0b', '#06b6d4', '#8b5cf6', '#ec4899'];
+            const c = colors[index % colors.length];
+            return `<svg viewBox="0 0 100 100" class="w-full h-full"><ellipse cx="50" cy="75" rx="42" ry="12" fill="#0284c7" opacity="0.6"/><path d="M15,72 Q50,45 85,72 Z" fill="${c}"/><path d="M48,55 Q52,35 60,25" stroke="#78350f" stroke-width="4" fill="none"/><path d="M60,25 Q45,20 40,25 M60,25 Q70,18 75,25" stroke="#15803d" stroke-width="3" fill="none"/></svg>`;
+        }
+
+        /* ================================================================= */
+        /* 8. LOCALSTORAGE HISTORY & MODALS                                  */
+        /* ================================================================= */
+
+        function saveHistoryRecord(isExcellence) {
+            const history = JSON.parse(localStorage.getItem('onepiece_geo_history') || '[]');
+            const record = {
+                date: new Date().toLocaleDateString('vi-VN') + ' ' + new Date().toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'}),
+                name: playerName,
+                score: score,
+                title: isExcellence ? 'Vua Hải Tặc Địa Lý' : 'Tân Binh Học Bài'
+            };
+            history.unshift(record);
+            localStorage.setItem('onepiece_geo_history', JSON.stringify(history.slice(0, 15)));
+        }
+
+        function loadHistory() {
+            const container = document.getElementById('history-list-container');
+            const history = JSON.parse(localStorage.getItem('onepiece_geo_history') || '[]');
+
+            if (history.length === 0) {
+                container.innerHTML = `<div class="text-center py-6 text-slate-400 text-xs sm:text-sm font-medium"><i class="fa-solid fa-box-open text-3xl mb-1.5 block"></i> Chưa có lịch sử hải trình nào. Hãy bắt đầu chơi!</div>`;
+                return;
+            }
+
+            container.innerHTML = history.map(item => `
+                <div class="bg-slate-800/80 p-3 rounded-2xl border border-amber-500/20 flex items-center justify-between shadow">
+                    <div>
+                        <div class="font-bold text-yellow-300 text-xs sm:text-sm flex items-center gap-1.5">
+                            <i class="fa-solid fa-user-astronaut text-amber-400"></i> ${item.name}
+                            <span class="text-[9px] bg-amber-900/80 text-amber-200 px-2 py-0.5 rounded-full border border-amber-500/40">${item.title}</span>
+                        </div>
+                        <div class="text-[10px] text-slate-400 mt-0.5"><i class="fa-regular fa-clock mr-1"></i> ${item.date}</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-base sm:text-lg font-black font-pirate text-amber-400">${item.score} đ</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function clearHistory() {
+            localStorage.removeItem('onepiece_geo_history');
+            loadHistory();
+        }
+
+        function openModal(id) {
+            if (id === 'modal-history') loadHistory();
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        function confirmExitToHome() {
+            if (confirm("Bạn có chắc chắn muốn rời ván chơi hiện tại về Trang Chủ không?")) {
+                returnToHome();
+            }
+        }
+
+        function returnToHome() {
+            stopBGM();
+            document.getElementById('screen-game').classList.add('hidden');
+            document.getElementById('screen-home').classList.remove('hidden');
+            closeModal('modal-treasure');
+        }
+    </script>
+</body>
+</html>
